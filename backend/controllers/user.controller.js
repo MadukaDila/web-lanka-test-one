@@ -46,3 +46,52 @@ exports.postSignup = (req, res, next) => {
     });
 };
 
+exports.postLogin = (req, res, next) => {
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = req.body.password;
+  
+    User.findOne({ email: email })
+      .then((user) => {
+        if (!user) {        
+          return res.json({
+            message: "Invalid username or password",
+            error: true,
+          });
+        }
+  
+        bcrypt
+          .compare(password, user.password)
+          .then((doMatched) => {
+            if (doMatched) {            
+              let loggedInUser = {
+                // username: user.username,/
+                // fullName: user.fullName,
+                email: user.email,
+                message: "Login successfull",
+                error: false,
+              };
+  
+              return res.json({ loggedInUser });
+            } else {
+              return res.json({
+                message: "Login NOT successfull",
+                error: true,
+              });
+            }          
+          })
+          .catch((err2) => {          
+            return res.json({
+              message: err2,
+              error: true,
+            });
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.json({
+          message: err,
+          error: true,
+        });
+      });
+  };
