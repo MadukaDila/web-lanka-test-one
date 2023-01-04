@@ -7,6 +7,8 @@ const mongoose = require("mongoose");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
 const connectionUrl ="mongodb://127.0.0.1:27017/demo";
+const userRoutes = require("./routes/user.routes");
+
 
 const app = express();
 app.use(function (req, res, next) {
